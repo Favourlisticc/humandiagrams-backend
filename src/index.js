@@ -15,12 +15,12 @@ app.use(express.json());
 // For parsing application/x-www-form-urlencoded
 app.use(express.urlencoded({ extended: true }));
 
-// Allow CORS for any origin
 app.use(cors({
-  origin: '*',  // Allows all origins
-  methods: ['GET', 'POST', 'PUT', 'DELETE', "PATCH"], // Optionally specify allowed methods
-  allowedHeaders: ['Content-Type', 'Authorization'], // Optionally specify allowed headers
-}));
+    origin: 'https://www.humandiagram.com', // Specify the exact domain instead of '*'
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true, // if you need to allow cookies
+  }));
 
 // Routes
 app.use('/admin', admin);
