@@ -16,7 +16,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use(cors({
-    origin: 'https://www.humandiagram.com', // Specify the exact domain instead of '*'
+    origin: ['https://www.humandiagram.com', "http://localhost:3000"], // Specify the exact domain instead of '*'
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true, // if you need to allow cookies
