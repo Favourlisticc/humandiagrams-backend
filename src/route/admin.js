@@ -129,43 +129,61 @@ router.post('/send-email', (req, res) => {
   });
   });
 
-router.post('/add-product', async (req, res) => {
-  try {
-    const { title, price, image } = req.body;
-    console.error(title, price, image);
+  router.post('/add-product', async (req, res) => {
+    try {
+      const { title, price, image, collection } = req.body;
 
-    // Validate required fields
-    if (!title || !price || !image) {
-      return res.status(400).send({ error: 'Title, price, and image are required' });
+      console.log(req.body)
+  
+      // Validate required fields
+      if (!title || !price || !image || !collection) {
+        return res.status(400).send({ error: 'All fields including collection are required' });
+      }
+  
+  
+      // Create a new product instance
+      const product = new Clothe({
+        title,
+        price,
+        image,
+        collection, // Save the normalized collection array
+      });
+  
+      // Save the product to the database
+      await product.save();
+  
+      res.status(201).send({ message: 'Product added successfully' });
+    } catch (error) {
+      res.status(500).send({ error: 'Failed to add product' });
+      console.error(error);
     }
+  });
 
-    // Create a new product instance
-    const product = new Clothe({
-      title,
-      price,
-      image,
-    });
-
-    // Save the product to the database
-    await product.save();
-
-    res.status(201).send({ message: 'Product added successfully' });
-  } catch (error) {
-    res.status(500).send({ error: 'Failed to add product' });
-    console.error(error);
-  }
-});
-
-// Fetch all products by category
+  // Get all products
 router.get('/products', async (req, res) => {
   try {
-    console.log("Fetching all products...");
-    const products = await Clothe.find({}); // Corrected: Changed `findall` to `find({})`
+    const products = await Clothe.find();
+    res.status(200).json(products);
     console.log("Products fetched successfully:", products);
-    res.json({ success: true, products });
   } catch (error) {
-    console.error('Error fetching products:', error);
-    res.status(500).json({ success: false, error: 'Failed to fetch products' });
+    console.log(error);
+    res.status(500).json({ message: error.message });
+  }
+});
+  
+
+// Fetch products by collection
+router.get('/products/:collection', async (req, res) => {
+  const { collection } = req.params;
+
+  try {
+    console.log(`Fetching products for collection: ${collection}`);
+    const product = await Clothe.find({ collection }); // Filter by collection
+    console.log("Products fetched successfully:", product);
+    res.json({ success: true, product });
+  } catch (error) {
+    console.error('Error fetching products by collection:', error);
+    res.status(500).json({ success: false, error: 'Failed to fetch products by collection' });
   }
 });
 

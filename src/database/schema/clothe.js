@@ -13,6 +13,10 @@ const ClotheSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  collection: {
+    type:String,
+    required: true
+  }
 }, { timestamps: true });
 
 module.exports = mongoose.model('Product', ClotheSchema);
